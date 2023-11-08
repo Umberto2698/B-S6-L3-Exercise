@@ -1,4 +1,4 @@
-package runners;
+package lezione22.runners;
 
 import lezione22.enteties.Author;
 import lezione22.services.AuthorService;

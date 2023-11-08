@@ -1,4 +1,4 @@
-package runners;
+package lezione22.runners;
 
 import lezione22.enteties.BlogPost;
 import lezione22.services.BlogPostService;
