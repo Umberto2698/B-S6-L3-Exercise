@@ -1,5 +1,7 @@
 package lezione22.services;
 
+import lezione22.answer_entities.BlogPostResponse;
+import lezione22.enteties.Author;
 import lezione22.enteties.BlogPost;
 import lezione22.exceptions.ItemoNotFoundException;
 import lezione22.repositories.BlogPostRepository;
@@ -10,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -18,6 +19,8 @@ public class BlogPostService {
 
     @Autowired
     private BlogPostRepository blogPostRepository;
+    @Autowired
+    private AuthorService authorService;
 
     public Page<BlogPost> getAllBlogPost(int page, int size, String orderBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -25,10 +28,11 @@ public class BlogPostService {
         return blogPostRepository.findAll(pageable);
     }
 
-    public BlogPost save(BlogPost blogPost) {
+    public BlogPost save(BlogPostResponse body) {
+        Author found = authorService.getById(body.getAuthorId());
+        BlogPost blogPost = BlogPost.builder().title(body.getTitle()).content(body.getContent()).category(body.getCategory()).author(found).readingTime(body.getReadingTime()).build();
         blogPost.setId(UUID.randomUUID());
         blogPost.setCover("https://picsum.photos/200/300");
-        blogPost.setReadingTime(new Random().nextInt(10, 240));
         return blogPostRepository.save(blogPost);
     }
 
@@ -36,7 +40,7 @@ public class BlogPostService {
         return blogPostRepository.findById(id).orElseThrow(() -> new ItemoNotFoundException(id));
     }
 
-    public BlogPost update(UUID id, BlogPost body) {
+    public BlogPost update(UUID id, BlogPostResponse body) {
         BlogPost found = this.getById(id);
         found.setReadingTime(body.getReadingTime());
         found.setTitle(body.getTitle());

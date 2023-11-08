@@ -1,5 +1,6 @@
 package lezione22.controllers;
 
+import lezione22.answer_entities.BlogPostResponse;
 import lezione22.enteties.BlogPost;
 import lezione22.services.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,13 @@ public class BlogPostController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogPost saveBlogPost(@RequestBody BlogPost body) {
+    public BlogPost saveBlogPost(@RequestBody BlogPostResponse body) {
+
         return blogPostService.save(body);
     }
 
     @PutMapping("/{id}")
-    public BlogPost updateBlogPost(@PathVariable UUID id, @RequestBody BlogPost body) {
+    public BlogPost updateBlogPost(@PathVariable UUID id, @RequestBody BlogPostResponse body) {
         return blogPostService.update(id, body);
     }
 

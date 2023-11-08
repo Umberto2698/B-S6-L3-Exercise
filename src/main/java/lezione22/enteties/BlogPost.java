@@ -2,10 +2,7 @@ package lezione22.enteties;
 
 import com.github.javafaker.Faker;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,7 +11,8 @@ import java.util.Random;
 import java.util.UUID;
 
 @Getter
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Entity
 @Table(name = "blog_posts")
@@ -36,6 +34,19 @@ public class BlogPost {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
+
+    @Override
+    public String toString() {
+        return "BlogPost{" +
+                "id=" + id +
+                ", category='" + category + '\'' +
+                ", cover='" + cover + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", readingTime=" + readingTime +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 
     public static class BlogPostBuiler {
         private Faker faker = new Faker(Locale.ITALY);
