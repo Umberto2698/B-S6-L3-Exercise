@@ -39,11 +39,9 @@ public class BlogPost {
 
     public static class BlogPostBuiler {
         private Faker faker = new Faker(Locale.ITALY);
-        private UUID id = UUID.randomUUID();
         private String title = faker.book().title();
         private String content = faker.lorem().characters(50);
         private String category = faker.book().genre();
-        private String cover = "https://picsum.photos/200/300";
         private int readingTime = new Random().nextInt(10, 240);
     }
 }
