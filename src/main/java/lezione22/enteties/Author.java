@@ -33,17 +33,15 @@ public class Author {
     private LocalDate birthday;
     @Column(name = "author_img")
     private String avatar;
-    
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     public static class AuthorBuilder {
         private Faker faker = new Faker(Locale.ITALY);
-        private UUID id = UUID.randomUUID();
         private String name = faker.name().firstName();
         private String surname = faker.name().lastName();
         private String email = name + "." + surname + "@faker.com";
-        private String avatar = "https://ui-avatars.com/api/?name=" + name + "+" + surname;
         private LocalDate birthday = faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

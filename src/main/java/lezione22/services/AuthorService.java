@@ -2,62 +2,48 @@ package lezione22.services;
 
 import lezione22.enteties.Author;
 import lezione22.exceptions.ItemoNotFoundException;
+import lezione22.repositories.AuthorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AuthorService {
-    private List<Author> authorList = new ArrayList<>();
+    @Autowired
+    private AuthorRepository authorRepository;
 
-    public List<Author> getAllAuthor() {
-        return this.authorList;
+    public Page<Author> getAuthors(int page, int size, String orderBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return authorRepository.findAll(pageable);
     }
 
     public Author save(Author author) {
         author.setId(UUID.randomUUID());
         author.setAvatar("https://ui-avatars.com/api/?name=" + author.getName() + "+" + author.getSurname());
-        this.authorList.add(author);
-        return author;
+
+        return authorRepository.save(author);
     }
 
     public Author getById(UUID id) {
-        Author author = null;
-        for (Author a : this.authorList) {
-            if (a.getId().compareTo(id) == 0) {
-                author = a;
-            }
-        }
-        if (author != null) {
-            return author;
-        } else {
-            throw new ItemoNotFoundException(id);
-        }
+        return authorRepository.findById(id).orElseThrow(() -> new ItemoNotFoundException(id));
     }
 
     public Author update(UUID id, Author body) {
-        Author found = null;
-        for (Author author : this.authorList) {
-            if (author.getId().compareTo(id) == 0) {
-                found = author;
-                found.setId(id);
-                found.setBirthday(body.getBirthday());
-                found.setName(body.getName());
-                found.setSurname(body.getSurname());
-                found.setEmail(body.getEmail());
-                found.setAvatar("https://ui-avatars.com/api/?name=" + body.getName() + "+" + body.getSurname());
-            }
-        }
-        if (found != null) {
-            return found;
-        } else {
-            throw new ItemoNotFoundException(id);
-        }
+        Author found = this.getById(id);
+        found.setBirthday(body.getBirthday());
+        found.setName(body.getName());
+        found.setSurname(body.getSurname());
+        found.setEmail(body.getEmail());
+        return authorRepository.save(found);
     }
 
     public void delete(UUID id) {
-        this.authorList.removeIf(author -> author.getId().compareTo(id) == 0);
+        Author found = this.getById(id);
+        authorRepository.delete(found);
     }
 }
