@@ -1,10 +1,7 @@
 package lezione22.enteties;
 
 import com.github.javafaker.Faker;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -24,6 +22,9 @@ import java.util.UUID;
 @Table(name = "authors")
 @Builder(builderClassName = "AuthorBuilder")
 public class Author {
+    @OneToMany(mappedBy = "author")
+    List<BlogPost> blogPostList;
+
     @Id
     private UUID id;
     private String name;
@@ -32,7 +33,7 @@ public class Author {
     private LocalDate birthday;
     @Column(name = "author_img")
     private String avatar;
-
+    
     @CreationTimestamp
     private LocalDateTime createdAt;
 
